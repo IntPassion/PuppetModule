@@ -1,0 +1,18 @@
+{
+  "Gemfile": "d304531043aaf87009a9e6991cd3b179",
+  "Rakefile": "46620991d8ca289544660257a9c7417b",
+  "manifests/params.pp": "5c62040cae042074ab4c88653eb8be2c",
+  "spec/acceptance/nodesets/centos-65-x64.yml": "454deccfad094609cdb63ba72fb66786",
+  "spec/spec_helper.rb": "a8b23c3ad629569e92e3950fe522dd62",
+  "templates/kdump.conf.erb": "75506ccd23ed153dbee6e3cb9d1cf650",
+  "tests/init.pp": "493567107724becb3cefbbcad483cd75",
+  "LICENSE": "88021265dbd43158efbdcf726082464e",
+  "manifests/init.pp": "bb42e99a6bd633d180f0282aaa6e55cf",
+  "README.md": "811357aeb31499e55ec3525550d14906",
+  "metadata.json": "a8f84a914f93370a0bc4faf0334b8f19",
+  "CHANGELOG.md": "22d53572a571b730006f2bffe87a2bce",
+  "spec/spec_helper_acceptance.rb": "48c394d6c153b70acf527ea0ba889f1e",
+  "spec/acceptance/kdump_spec.rb": "1f7a8710e29e7bd3a39bda9728e45d6b",
+  "spec/acceptance/nodesets/default.yml": "454deccfad094609cdb63ba72fb66786",
+  "spec/classes/kdump_spec.rb": "8482bc76d6589525f2f7e20b276f698c"
+}

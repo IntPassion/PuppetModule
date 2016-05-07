@@ -1,0 +1,5 @@
+[HTTP]
+name=puppet rpm package for RHEL
+baseurl=http://puppet/rhel6.3/
+enabled=1
+gpgcheck=0

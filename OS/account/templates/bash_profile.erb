@@ -1,0 +1,21 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+PATH=$PATH:$HOME/bin
+
+# Managed by Puppet
+
+PS1=<%= scope.lookupvar('ps1') %>
+
+<% scope.lookupvar('export').each do |value| -%>
+export <%= value %>
+<% end -%>
+
+umask <%= scope.lookupvar('umask') %>
+
