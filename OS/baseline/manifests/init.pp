@@ -1,4 +1,5 @@
-class baseline {
+class baseline (
+){
   # initialize the variable
   $profile_export = {
     "HISTFILE" => '$HOME/.sh_history',

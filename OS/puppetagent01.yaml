@@ -1,0 +1,14 @@
+---
+classes:
+#  baseline:
+  host_profile:
+    profilelist :
+      etc_profile:
+        filepath : '/etc/profile'
+        location : 'DL'
+        exportdict:
+          TMOUT : '1200'
+      root_profile:
+        filepath : '/root/.bash_profile'
+        location : 'DL'
+        umask : '027'

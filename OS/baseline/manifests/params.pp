@@ -35,12 +35,22 @@ class baseline::params {
                     'abrt','hadlaemon','ntp','saslauth','postfix','avahi','rpcuser',
                     'nfsnobody','sshd','tcpdump','oprofile','hpsmh']
 
+  $profile_export = {
+                      "HISTFILE" => '$HOME/.sh_history',
+                      "HISTSIZE" => '1024',
+                      "PS1"      => '`hostname`@DL\'$PWD\'$',
+                      "HISTTIMEFORMAT" => '"%Y-%m-%d %H:%M:%S "',
+                    }
+  $bashprofile_export = {
+                          "PS1" => '`hostname`@DL\'$PWD\'$',
+                        }
+
   case $::osfamily {
     'RedHat': {
       case $::operatingsystemrelease {
         '6.7': {
           $packageslist = [
-            "compat-libstdc++-296-2.96-144.el6.i686",   
+            "compat-libstdc++-296-2.96-144.el6.i686",
             "compat-libstdc++-33-3.2.3-69.el6.i686",
             "compat-libstdc++-33-3.2.3-69.el6.x86_64",
             "elfutils-libelf-devel-0.161-3.el6.i686",
