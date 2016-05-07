@@ -16,8 +16,8 @@ define host_profile::profile (
   validate_string($location)
 
   $etc_profile = {
-    "HISTFILE" => '$HOME/.sh_history',
-    "HISTSIZE" => '1024',
+    "HISTFILE"       => '$HOME/.sh_history',
+    "HISTSIZE"       => '1024',
     "HISTTIMEFORMAT" => '"%Y-%m-%d %H:%M:%S "',
   }
 
@@ -40,12 +40,17 @@ define host_profile::profile (
         line => "export ${key}=${value}",
       }
     }
-  } 
+  }
+
+  $ps1value = $filepath ? {
+    '/root/.bash_profile' => "export PS1=`hostname`@${location}\'\$PWD\'#",
+    default               => "export PS1=`hostname`@${location}\'\$PWD\'$",
+  }
 
   # 将ps1变量配置到文件中
   file_line { "${filepath}@PS1":
     path => $filepath,
-    line => "export PS1=`hostname`@${location}\'\$PWD\'$",
+    line => $ps1value,
   }
 
   # 如果输入了umask变量，则将该变量配置到文件中
@@ -65,29 +70,4 @@ define host_profile::profile (
       line => "TMOUT=${tmout}",
     }
   }
-
-
-/*
-  case $filetype {
-    '/etc/profile': {
-      file { '/etc/profile':
-        ensure => file,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '644',
-        content => template('baseline/profile.erb'),
-      }
-    }
-    '/root/.bash_profile': {
-      file { '/root/.bash_profile':
-        ensure => file,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '600',
-        path   => "/root/.bash_profile",
-        content => template('baseline/bash_profile.erb'),
-      }
-    }
-  }
-*/
 }

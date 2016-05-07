@@ -1,6 +1,6 @@
 ---
 classes:
-#  baseline:
+  host_account:
   host_profile:
     profilelist :
       etc_profile:
@@ -12,3 +12,7 @@ classes:
         filepath : '/root/.bash_profile'
         location : 'DL'
         umask : '027'
+  host_kernel:
+    kerneldict:
+
+    limitdict:
