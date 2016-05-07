@@ -1,4 +1,4 @@
-class baseline::security(
+class host_baseline::security(
 ) inherits baseline::params
 {
 
@@ -23,7 +23,7 @@ class baseline::security(
     require => File["system-auth-ac"],
   }
 
-  file { 
+  file {
     password-auth-ac:
     ensure => file,
     owner  => 'root',
@@ -43,7 +43,7 @@ class baseline::security(
     target  => "/etc/pam.d/password-auth-ac",
     require => File["password-auth-ac"],
   }
-    
+
   file {
     login_defs:
     ensure => file,
@@ -73,7 +73,7 @@ class baseline::security(
     path => "/etc/ssh/sshd_config",
     source => "puppet:///modules/$module_name/sshd_config",
   }
-  
+
   file {
     inittab:
     ensure => file,
@@ -93,7 +93,7 @@ class baseline::security(
     name => "/etc/init/control-alt-delete.conf",
     source => "puppet:///modules/$module_name/control-alt-delete.conf"
   }
- 
+
   file {
     limits_conf:
     ensure => file,
@@ -154,9 +154,9 @@ class baseline::security(
     path => "/etc/cron.allow",
     content => "root",
   }
-  
+
   file {
-    at_allow:    
+    at_allow:
     ensure => file,
     owner  => 'root',
     group  => 'root',

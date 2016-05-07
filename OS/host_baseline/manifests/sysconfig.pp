@@ -1,6 +1,6 @@
-class baseline::sysconfig
+class host_baseline::sysconfig
 {
-  
+
 
   file {
     clock:

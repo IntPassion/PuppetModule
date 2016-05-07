@@ -1,4 +1,4 @@
-class baseline::others (
+class host_baseline::others (
 ) inherits baseline::params
 {
   file {
@@ -11,13 +11,13 @@ class baseline::others (
     source => "puppet:///modules/$module_name/rsyslog.conf",
     notify => Service['rsyslog'],
   }
-  
-  service { 
+
+  service {
     rsyslog:
     name   => 'rsyslog',
     ensure => 'running',
   }
-  
+
   file {
     ipv6_config:
     ensure  => present,
@@ -27,16 +27,16 @@ class baseline::others (
     path    => '/etc/modprobe.d/ipv6.conf',
     content => 'options ipv6 disable=1',
   }
-  
-  exec { 
+
+  exec {
     del_rhosts:
-    command => "find / -name '.rhosts' -print", 
+    command => "find / -name '.rhosts' -print",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 
-  exec { 
+  exec {
     del_netrc:
-    command => "find / -name '.netrc' -print", 
+    command => "find / -name '.netrc' -print",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 
@@ -72,7 +72,7 @@ class baseline::others (
     bootmode => 'default',
     target => '/etc/grub.conf',
   }
-  
+
   file {
     rhsmd:
     ensure => file,
@@ -85,17 +85,17 @@ class baseline::others (
 }
 
 class baseline::others::kdump_vmware {
-  exec { 
+  exec {
     kdump_vmware:
-    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=128M >> /etc/grub.conf", 
+    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=128M >> /etc/grub.conf",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 }
 
 class baseline::others::kdump_physical {
-  exec { 
+  exec {
     kdump_physical:
-    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=768M >> /etc/grub.conf", 
+    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=768M >> /etc/grub.conf",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 }

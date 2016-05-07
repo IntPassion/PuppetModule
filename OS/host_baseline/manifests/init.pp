@@ -1,4 +1,4 @@
-class baseline (
+class host_baseline (
 ){
   # initialize the variable
   $profile_export = {

@@ -1,4 +1,4 @@
-class baseline::sysconfig (
+class host_baseline::sysconfig (
   $kernel = {},
 ) {
   file {

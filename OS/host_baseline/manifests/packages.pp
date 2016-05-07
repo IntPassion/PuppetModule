@@ -1,5 +1,5 @@
-class baseline::packages(
-) inherits baseline::params 
+class host_baseline::packages(
+) inherits baseline::params
 {
 
   package {

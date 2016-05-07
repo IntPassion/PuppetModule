@@ -1,5 +1,5 @@
 {
-  "name": "cffex-baseline",
+  "name": "cffex-host_baseline",
   "version": "0.1.0",
   "author": "IntPassion",
   "summary": "Setting os baseline",
@@ -11,4 +11,3 @@
     {"version_requirement":">= 4.3.0","name":"puppetlabs-stdlib"}
   ]
 }
-

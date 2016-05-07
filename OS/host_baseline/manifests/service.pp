@@ -1,4 +1,4 @@
-class baseline::service(
+class host_baseline::service(
 ) inherits baseline::params
 {
   service {

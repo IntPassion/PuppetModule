@@ -1,4 +1,4 @@
-class baseline::params {
+class host_baseline::params {
 
   $DL_TRADE_LIST = ['config1','config2','arb','tkernel1','tkernel2','qkernel1',
                     'qkernel2','front1','front2', 'front3','front4','mdbpub1',
