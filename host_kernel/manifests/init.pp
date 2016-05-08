@@ -1,11 +1,16 @@
 class host_kernel (
-  $kerneldict = {},
-  $limitdict  = {},
-)
+  $kernellist = {},
+  $limitlist  = {},
+) 
 {
-  validate_hash($kerneldict)
-  validate_hash($limitdict)
+  validate_array($limitlist)
+  validate_array($kernellist)
 
-  create_resources( host_kernel::kernel, $kerneldict)
-  create_resources( host_kernel::limit, $limitdict)
+  Class { 'host_kernel::kernels':
+    kernels => $kernellist,
+  }
+
+  Class { 'host_kernel::limits':
+    limits => $limitlist,
+  }
 }

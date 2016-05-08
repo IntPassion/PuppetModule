@@ -1,6 +1,6 @@
 ---
 classes:
-  host_account:
+  #host_account:
   host_profile:
     profilelist :
       etc_profile:
@@ -13,6 +13,9 @@ classes:
         location : 'DL'
         umask : '027'
   host_kernel:
-    kerneldict:
-
-    limitdict:
+    kernellist : 
+      - 'net.core.rmem_default 16777'
+    limitlist:
+      - '* soft nproc 1024'
+      - '* hard nproc 2024'
+      - '* hard cpu 1024'
