@@ -1,129 +1,93 @@
-class host_baseline::security(
-) inherits baseline::params
+class host_sysconfig::security(
+  $logindefs = [],
+  $sshdconfig = [],
+  $auditdconfig = [],
+  $syslog = [],
+) inherits host_baseline::params
 {
 
-  file {
-    system-auth-ac:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    path   => "/etc/pam.d/system-auth-ac",
-    source => "puppet:///modules/$module_name/system-auth"
+  # 安全配置-口令过期检查
+  if size($logindefs) == 0 {
+    $logindefs_total = $logindefs_common
+  }
+  else {
+    $logindefs_total = concat($logindefs_common, $logindefs)
   }
 
-  file {
-    system-auth:
-    ensure  => link,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0777',
-    path    => '/etc/pam.d/system-auth',
-    target  => "/etc/pam.d/system-auth-ac",
-    require => File["system-auth-ac"],
+  $logindefs_total.each |$logindef| {
+    $key = split($logindef, '[ ]')[0]
+    $value = split($logindef, '[ ]')[1]
+
+    augeas { "${host_sysconfig::params::login_path}@$" :
+      context   => "/files${host_sysconfig::params::login_path}",
+      changes   => [
+        "set ${key} $value",
+      ],
+    }
   }
 
-  file {
-    password-auth-ac:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    path   => "/etc/pam.d/password-auth-ac",
-    source => "puppet:///modules/$module_name/system-auth"
+  # 安全配置-ssh配置文件
+  if size($sshdconfig) == 0 {
+    $sshdconfig_total = $sshdconfig_common
+  }
+  else {
+    $sshdconfig_total = concat($sshdconfig_common, $sshdconfig)
   }
 
-  file {
-    password-auth:
-    ensure  => link,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0777',
-    path    => '/etc/pam.d/password-auth',
-    target  => "/etc/pam.d/password-auth-ac",
-    require => File["password-auth-ac"],
+  $sshdconfig_total.each |$sshdconfig| {
+    $key = split($sshdconfig, '[ ]')[0]
+    $value = split($sshdconfig, '[ ]')[1]
+
+    augeas { $key:
+      context   => "/files${host_sysconfig::params::sshdconfig_path}",
+      changes   => [
+        "set $key $value",
+      ],
+    }
   }
 
-  file {
-    login_defs:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    path   => "/etc/login.defs",
-    source => "puppet:///modules/$module_name/login.defs"
+
+  # 安全配置-auditd日志配置
+  if size($auditdconfig) == 0 {
+    $auditdconfig_total = $auditdconfig_common
+  }
+  else {
+    $auditdconfig_total = concat($auditdconfig_common, $auditdconfig)
   }
 
-  file {
-    logrotate:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    path   => "/etc/logrotate.conf",
-    source => "puppet:///modules/$module_name/logrotate.conf"
+  $auditdconfig_total.each |$auditdconfig| {
+    $key = split($auditdconfig, '[=]')[0]
+    $value = split($auditdconfig, '[=]')[1]
+
+    augeas { $key:
+      context   => "/files${host_sysconfig::params::auditdconfig_path}",
+      changes   => [
+        "set $key $value",
+      ],
+    }
   }
 
-  file {
-    sshd_config:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
-    path => "/etc/ssh/sshd_config",
-    source => "puppet:///modules/$module_name/sshd_config",
+  # 安全配置-syslog日志配置
+  if size($syslog) == 0 {
+    $syslog_total = $syslog_common
+  }
+  else {
+    $syslog_total = concat($syslog_common, $syslog)
   }
 
-  file {
-    inittab:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    name => "/etc/inittab",
-    source => "puppet:///modules/$module_name/inittab"
+  $syslog_total.each |$eachsyslog| {
+    $key = split($eachsyslog, '[=]')[0]
+    $value = split($eachsyslog, '[=]')[1]
+
+    augeas { $key:
+      context   => "/files${host_sysconfig::params::syslog_path}",
+      changes   => [
+        "set $key $value",
+      ],
+    }
   }
 
-  file {
-    control-alt-delete:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    name => "/etc/init/control-alt-delete.conf",
-    source => "puppet:///modules/$module_name/control-alt-delete.conf"
-  }
-
-  file {
-    limits_conf:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    name => "/etc/security/limits.conf",
-    source => "puppet:///modules/$module_name/limits.conf"
-  }
-
-  file {
-    selinux_config:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    name => "/etc/selinux/config",
-    source => "puppet:///modules/$module_name/config"
-  }
-
-  file {
-    auditd:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0640',
-    path   => "/etc/audit/auditd.conf",
-    source => "puppet:///modules/$module_name/auditd.conf",
-  }
-
+  # 安全配置-内核模块的装载于卸载
   file {
     audit_rules:
     ensure => file,
@@ -132,53 +96,5 @@ class host_baseline::security(
     mode   => '0640',
     path => "/etc/audit/audit.rules",
     source => "puppet:///modules/$module_name/audit.rules",
-  }
-
-  file {
-    syslog:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0640',
-    path => "/etc/audisp/plugins.d/syslog.conf",
-    source => "puppet:///modules/$module_name/syslog.conf",
-  }
-
-
-  file {
-    cron_allow:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
-    path => "/etc/cron.allow",
-    content => "root",
-  }
-
-  file {
-    at_allow:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
-    path => "/etc/at.allow",
-    content => 'root',
-  }
-
-  file {
-    cron_deny:
-    path => "/etc/cron.deny",
-    ensure => "absent",
-  }
-
-  file {
-    at_deny:
-    path => "/etc/at.deny",
-    ensure => "absent",
-  }
-
-  user {
-    $nologin_users:
-    shell => '/sbin/nologin',
   }
 }
