@@ -1,15 +1,21 @@
-class host_baseline::others (
-) inherits baseline::params
+class host_sysconfig::others (
+  $logserver = undef,
+) inherits host_sysconfig::params
 {
+  if $logserver {
+    validate_ip_address($logserver)
+    $logserver_ip = $logserver
+  }
+
   file {
     rsyslog_conf:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    path   => "/etc/rsyslog.conf",
-    source => "puppet:///modules/$module_name/rsyslog.conf",
-    notify => Service['rsyslog'],
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    path    => "/etc/rsyslog.conf",
+    content => template('host_sysconfig/rsyslog.erb')
+    notify  => Service['rsyslog'],
   }
 
   service {
@@ -18,6 +24,7 @@ class host_baseline::others (
     ensure => 'running',
   }
 
+  # 其他-禁用ipv6
   file {
     ipv6_config:
     ensure  => present,
@@ -28,15 +35,16 @@ class host_baseline::others (
     content => 'options ipv6 disable=1',
   }
 
+  # 检查rhosts信任关系文件. 删除rhosts、netrc文件并清空hosts.equiv文件
   exec {
     del_rhosts:
-    command => "find / -name '.rhosts' -print",
+    command => "find / -name '.rhosts' -exec rm -rf {} \;",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 
   exec {
     del_netrc:
-    command => "find / -name '.netrc' -print",
+    command => "find / -name '.netrc' -exec rm -rf {} \;",
     path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 
@@ -47,19 +55,12 @@ class host_baseline::others (
     content => '',
   }
 
+  # 其他-配置kdump
   class { 'kdump':
     enable => true,
-    config_overrides => {
-      'path' => '/var/crash',
-      'core_collector' => 'makedumpfile -c -d 31',
-      'default' => 'shell',
-    }
+    config_overrides => $kdump_config,
   }
 
-  $crashkernel = $::virtual ? {
-    'vmware'   => '128M',
-    'physical' => '768M',
-  }
   kernel_parameter { 'crashkernel':
     ensure => present,
     value  => $crashkernel,
@@ -73,6 +74,7 @@ class host_baseline::others (
     target => '/etc/grub.conf',
   }
 
+  # 其他-修改并注释rhsmd中的内容
   file {
     rhsmd:
     ensure => file,
@@ -81,21 +83,5 @@ class host_baseline::others (
     mode   => '0700',
     path   => "/etc/cron.daily/rhsmd",
     source => "puppet:///modules/$module_name/rhsmd",
-  }
-}
-
-class baseline::others::kdump_vmware {
-  exec {
-    kdump_vmware:
-    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=128M >> /etc/grub.conf",
-    path => ["/usr/bin", "/usr/sbin", "/bin"],
-  }
-}
-
-class baseline::others::kdump_physical {
-  exec {
-    kdump_physical:
-    command => "grep '^crashkernel' /etc/grub.conf || echo crashkernel=768M >> /etc/grub.conf",
-    path => ["/usr/bin", "/usr/sbin", "/bin"],
   }
 }

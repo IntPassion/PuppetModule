@@ -1,39 +1,41 @@
 class host_sysconfig::sysconfig(
-  $clock = $host_sysconfig::parmas::clock,
-  $i18n  = $host_sysconfig::parmas::i18n,
-  $inittab = $host_sysconfig::parmas::inittab,
-  $selinux = $host_sysconfig::parmas::selinux,
-  $logrotate = $host_sysconfig::parmas::logrotate,
+  $clock = $host_sysconfig::params::clock_common,
+  $i18n  = $host_sysconfig::params::i18n_common,
+  $inittab = $host_sysconfig::params::inittab_common,
+  $selinux = $host_sysconfig::params::selinux_common,
+  $logrotate = $host_sysconfig::params::logrotate_common,
 ) inherits host_sysconfig::params
 {
+  #$selinux = $host_sysconfig::parmas::selinux,
   validate_string($clock)
   validate_string($i18n)
   validate_string($inittab)
   validate_string($selinux)
 
-  validate_bool(str2bool($control_alt_delete))
-
   shellvar { "ZONE":
     ensure => present,
-    target => $clock_path,
+    #target => $clock_path,
+    target => "/etc/sysconfig/clock",
     value  => $clock,
     quoted => "double",
   }
 
-
   shellvar { "LANG":
     ensure => present,
-    target => $lang_path,
-    value  =>  $lang,
+    target => $i18n_path,
+    value  =>  $i18n,
     quoted => "double",
   }
 
   # 安全配置-修改默认运行级别
-  augeas { "inittab" :
-    context   => $inittab_path,
-    changes   => [
-      "set runlevels ${inittab}",
-    ],
+  file {
+    inittab:
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    path    => "/etc/inittab",
+    content => template('host_sysconfig/inittab.erb')
   }
 
   # 安全配置-禁用control+alt+delete重启
@@ -47,7 +49,7 @@ class host_sysconfig::sysconfig(
   }
 
   # 安全配置-禁用SELINUX
-  augeas { $host_sysconfig::params::selinux_path :
+  augeas { $selinux_path :
     context   => "/files${selinux_path}",
     changes   => [
       "set SELINUX ${selinux}",
@@ -55,7 +57,7 @@ class host_sysconfig::sysconfig(
   }
 
   # 安全配置-修改日志转储时间
-  augeas { $host_sysconfig::params::logrotate_path :
+  augeas { $logrotate_path :
     context   => "/files${logrotate_path}",
     changes   => [
       "set rotate ${logrotate}",
@@ -90,6 +92,4 @@ class host_sysconfig::sysconfig(
     path => "/etc/at.deny",
     ensure => "absent",
   }
-
-
 }

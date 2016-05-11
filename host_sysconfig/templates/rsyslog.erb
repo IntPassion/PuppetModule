@@ -6,11 +6,13 @@
 #### MODULES ####
 
 $ModLoad imuxsock # provides support for local system logging (e.g. via logger command)
+# Managed by puppet
 $SystemLogRateLimitInterval 0
 $SystemLogRateLimitBurst 0
 $IMUxSockRateLimitBurst 0
 $IMUXSockRateLimitBurst 0
 $IMUxSockRateLimitSeverity 7
+# Managed by puppet
 
 $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 #$ModLoad immark  # provides --MARK-- message capability

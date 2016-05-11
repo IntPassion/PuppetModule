@@ -1,4 +1,4 @@
-class host_sysconfig::system-auth
+class host_sysconfig::system_auth
 {
   file {
     system-auth-ac:

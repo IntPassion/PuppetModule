@@ -8,26 +8,26 @@ class host_sysconfig::params {
 
   case $::osfamily {
     'RedHat': {
-      $clock = "Asia/Shanghai"
+      $clock_common = "Asia/Shanghai"
       $clock_path = "/etc/sysconfig/clock"
 
-      $i18n = 'en_US.UTF-8'
+      $i18n_common = 'en_US.UTF-8'
       $i18n_path = '/etc/sysconfig/i18n'
 
-      $inittab = '3'
+      $inittab_common = '3'
       $inittab_path = "/etc/inittab"
 
       $logindefs_common = ['PASS_MAX_DAYS 90',
                 'PASS_WARN_AGE 10',
                 'PASS_MIN_LEN 12',
               ]
-      $login_path = '/etc/login.defs'
+      $login_path = "/etc/login.defs"
 
-      $logrotate = '12'
-      $logrotate_path = '/etc/logrotate.conf'
+      $logrotate_common = '12'
+      $logrotate_path = "/etc/logrotate.conf/"
 
-      $selinux = 'disabled'
-      $selinux_path   = '/etc/selinux/config'
+      $selinux_common = "disabled"
+      $selinux_path   = "/etc/selinux/config/"
 
       $sshdconfig_common = [
         'Protocol 2',
@@ -54,6 +54,17 @@ class host_sysconfig::params {
         'args=LOG_DEBUG LOG_LOCAL1',
       ]
       $syslog_path = '/etc/audisp/plugins.d/syslog.conf'
+
+      $kdump_config = {
+        'path'           => '/var/crash',
+        'core_collector' => 'makedumpfile -c -d 31',
+        'default'        => 'shell',
+      }
+
+      $crashkernel = $::virtual ? {
+        'vmware'   => '128M',
+        'physical' => '768M',
+      }
     }
 
     default : {

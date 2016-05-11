@@ -1,9 +1,6 @@
 class host_kernel::params {
 
-  $kernel_path = $::operatingsystem ? {
-    'RedHat' => '/etc/sysctl.conf',
-  }
-  # kernel参数默认配置
+  $kernel_path = '/etc/sysctl.conf'
   $kernel_common = [
     'net.ipv4.tcp_syncookies 2',
     'net.ipv4.tcp_max_syn_backlog 4096',
@@ -11,10 +8,7 @@ class host_kernel::params {
     'net.ipv4.tcp_synack_retries 3',
   ]
 
-  $limits_path = $::operatingsystem ? {
-    'RedHat' => '/etc/security/limits.conf',
-  }
-  # limit参数默认配置
+  $limits_path = '/etc/security/limits.conf'
   $limits_common = [
     '* soft nofile 4096',
     '* hard nofile 65536',

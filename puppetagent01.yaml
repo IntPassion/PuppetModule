@@ -18,4 +18,14 @@ classes:
     limitlist:
       - '* soft nproc 1024'
       - '* hard nproc 2024'
-      - '* hard cpu 1024'
+      - '* hard cpu 10240'
+  host_pkgandsvc:
+    pkglist : []
+    startlist : []
+    stoplist : []
+  host_sysconfig:
+    sysconfig : {}
+    logindefs : []
+    sshdconfig : []
+    auditdconfig : []
+    syslog : []

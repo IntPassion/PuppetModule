@@ -1,6 +1,6 @@
 define host_pkgandsvc::packages(
   $pkglist = [],
-)
+) 
 {
   validate_array($pkglist)
 

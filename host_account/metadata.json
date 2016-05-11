@@ -1,14 +1,13 @@
 {
-  "name": "cffex-account",
-  "version": "0.2.0",
+  "name": "cffex-os_user",
+  "version": "1.2.0",
   "author": "IntPassion",
-  "summary": "Manage user and group, and configurate the users' profile",
-  "license": "Apache 2.0",
-  "source": "",
+  "summary": "OS - Manage user and group",
+  "license": "GNU",
+  "source": "GitHub",
   "issues_url": null,
   "project_page": null,
   "dependencies": [
     {"version_requirement":">= 4.6.0","name":"puppetlabs/stdlib"}
   ]
 }
-

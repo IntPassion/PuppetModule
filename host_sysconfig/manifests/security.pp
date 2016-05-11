@@ -3,7 +3,7 @@ class host_sysconfig::security(
   $sshdconfig = [],
   $auditdconfig = [],
   $syslog = [],
-) inherits host_baseline::params
+) inherits host_sysconfig::params
 {
 
   # 安全配置-口令过期检查
@@ -18,7 +18,7 @@ class host_sysconfig::security(
     $key = split($logindef, '[ ]')[0]
     $value = split($logindef, '[ ]')[1]
 
-    augeas { "${host_sysconfig::params::login_path}@$" :
+    augeas { "${host_sysconfig::params::login_path}@$key" :
       context   => "/files${host_sysconfig::params::login_path}",
       changes   => [
         "set ${key} $value",
@@ -37,7 +37,6 @@ class host_sysconfig::security(
   $sshdconfig_total.each |$sshdconfig| {
     $key = split($sshdconfig, '[ ]')[0]
     $value = split($sshdconfig, '[ ]')[1]
-
     augeas { $key:
       context   => "/files${host_sysconfig::params::sshdconfig_path}",
       changes   => [
